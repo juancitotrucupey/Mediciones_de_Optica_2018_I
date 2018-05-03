@@ -1,0 +1,7 @@
+presion:
+kha706a
+mpxm2102as
+
+tarjeta:
+sigmaelectronica.net
+28soic 
