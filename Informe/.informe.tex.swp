@@ -1,0 +1,68 @@
+\documentclass[11pt]{article}
+%Gummi|065|=)
+\title{\textbf{Informe Experimento Optica}}
+\author{Juan Florez\\
+		Diana Garcia}
+\date{}
+\begin{document}
+
+\maketitle
+
+\section{Montaje Experimental}
+
+
+Se construy\'o una c\'amara con ventanas transparentes para acoplar al interferometro de PASCO, se uso una bomba de vacio y se dispusieron de los acoples necesarios para crear un sistema libre de fugas de gas.\\
+
+\subsection{Sensores}
+
+La propuesta inicial fue usar dos sensores anal\'ogicos, uno para medir la presi\'on y otro para medir la luminosidad:
+
+\begin{enumerate}
+\item \textbf{Presi\'on:} MPX2102\\
+Alimentaci\'on con una fuente DC menor a 16V, tal que la salida escala linealmente con el voltaje de alimentaci\'on, y si se alimenta con 10V se tiene un aumento de 0.4mV por cada KPa.\\
+Rango 0-100KPa.\\
+Para usarlo con el arudino es necesario compensar y amplificar la señal en un factor de x125 si se quiere usar el rango completo de medici\'on del sensor.
+\item \textbf{Luminosidad;} GA1A2S100SS\\
+Alimentaci\'on con 3.3 V, tal que se tiene un aumento de 0.48 $\mu A$ por cada Lx.\\
+Rango 10-10000Lx.\\ 
+Varia la corriente de salida del sensor, luego, se utiliza un resistencia entre el pin de salida del sensor y GND tal que el valor de la caida del voltaje sobre esta resistencia se encuentra en el rango 0V-5V que usa es Arduino para sus entradas analogicas. 
+\end{enumerate}
+
+\textbf{Amplificaci\'on de la señal del sensor MPX2120}\\
+
+\noindent Se utiliza un regulador de voltaje L7805CV para alimentar el sensore de presi\'on, lo cual implica que se espera un aumento de 0.2mV por cada KPa en la señal de salida del sensor.\\
+
+\noindent Se utilizo un integrado LM324N que contiene 4 amplificadores operacionales, de los cuales se usa uno en modo no inversor, donde las resistencias toman valores $R_f=46.9 x 10^3$ Ohm y $R_g=180.6$ Ohm, obteniendo teoricamente un aumento de x261.4; el factor de aumento medido para esta configuraci\'on de resistencias fue de x254.6. El integrado LM324N se alimenta con la señal producida por un regulador de voltaje L7812CV.\\
+
+\noindent Con este montaje se obtine una señal en el rango 0V-5V que se espera pueda leer el Arduino, sin embargo, es necesario implementar un circuito de compensaci\'on para poder alimentar esta señal a las entradas analogicas, de lo contrario, le señal medida por el Arduino no es estable. Tal circuito de compensaci\'on no se logr\'o diseñar, luego, se trat\'o de implementar una versi\'on propuesta por Michelle Clifford y Fernando Gonzalez pero tal implementaci\'on no sirvi\'o para estabilizar la señal recibida por el Arduino.\\
+
+\noindent Se utiliza una resistencia con valor $R_{lum}=21.6 x 10^{3}$ Ohm para medir la señal producida por el sensor de luminosidad, obteniendo una señal en el rango 0V-5V para las condiciones del experimento. La señal obtenida con el sensor de luminosidad no es estable y no se encuentra una forma de estabilizarla.\\
+
+\noindent Ante las dificultades encontradas al momento de medir la presi\'on y la luminosidad con los sensores anal\'ogicos se plantea utilizar circuitos integrados que contengan los sensores requeridos y cuyas lecturas se puedan leer facilmente con el microcontrolador Arduino. Se escogen circuitos integrados que usan el protocolo I2C para comunicarse con Arduino, y utilizan una alimentaci\'on de 3.3V, que puede ser proporcionada por la placa Arduino UNO.\\
+
+\noindent El protocolo I2C usa dos l\'ineas para enviar y recibir informaci\'on entre los dispositivos conectados, la l\'inea SCL (Signal Clock) y la l\'inea SDA (Signal Data). La l\'inea SCL establece una señal que varia periodicamente entre los valores 0V (cero l\'ogico) y 5V (uno l\'ogico), y la l\'inea SDA env\'ia bytes de informaci\'on que pueden distinguirse a partir de la señal env\'iada en la l\'inea SCL. Para enviar y recibir informaci\'on existe un protocolo, el cual est\'a implementado en la libreria "Wire.h" de Arduino.
+
+\noindent \textbf{Sensor de presi\'on BMP180}
+
+\noindent El sensor BMP180 permite medir presi\'on absoluta con una presici\'on mayor a 7 Pa en el rango 30KPa-110KPa, adem\'as contiene un sensor de temperatura con una presici\'on de 0.05 C. Se puede alimentar con una fuente DC en el rango 3V-5V.\\
+
+
+\noindent \textbf{Sensor de luminosidad TSL2561}
+\noindent El sensor TSL2561 permite medir la luminosidad con una presici\'on de 0.05 Lx en el rango 0Lx-40000Lx.Se puede alimentar con una fuente DC en el rango 2.7V-3.6V.
+
+ 
+
+
+You are now using Gummi 0.6.6. Many new exciting features have been added to the 0.6 series. The document editor is now a tabbed instance, allowing multiple documents to be worked on simultaneously. Using the new projects menu, you can group files together for easy access. 
+
+Support for two high-level {\LaTeX} building systems, \emph{rubber}\footnote{https://launchpad.net/rubber/} \& \emph{latexmk}\footnote{http://www.phys.psu.edu/{\textasciitilde}collins/software/latexmk-jcc/} has been added as well. Your preferred typesetter can be configured through the Compilation tab in the Preferences menu. Typesetters that are not installed on your system will not be selectable. 
+
+Added for your viewing convenience is a continuous preview mode for the PDF. This mode is enabled by default, but can also be disabled through the \emph{(View $\rightarrow$ Page layout in preview)} menu. Complementary to this feature is SyncTeX integration, which allows you to synchronize the position in your editor with the PDF preview. 
+
+\section{Feedback}
+We hope you will enjoy using this release as much as we enjoyed creating it. If you have comments, suggestions or wish to report an issue you are experiencing - contact us at: \emph{https://github.com/alexandervdm/gummi}.
+
+\section{One more thing}
+If you are wondering where your old default text is; it has been stored as a template. The template menu can be used to access and restore it. 
+
+\end{document}

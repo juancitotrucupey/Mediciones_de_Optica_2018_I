@@ -1,3 +1,12 @@
+// Distributed with a free-will license.
+// Use it any way you want, profit or free, provided it fits in the licenses of its associated works.
+// MAX44009
+// This code is designed to work with the MAX44009_I2CS I2C Mini Module available from ControlEverything.com.
+// https://www.controleverything.com/products
+
+// Your sketch must #include this library, and the Wire library
+// (Wire is a standard library included with Arduino):
+
 //Library for the TSL2561 sensor
 #include <SparkFunTSL2561.h>
 //Library to send information bya I2C
@@ -20,15 +29,6 @@ unsigned int ms;  // Integration ("shutter") time in milliseconds
 
 // MAX44009 I2C address is 0x4A(74)
 #define Addr 0x4A
-
-//Variables para leer la informacion del sensor de luz
-int analogPin_0 = 0;
-double Luminosidad;
-int val_0 = 0; // variable to store the value read
-double Promedio;
-double Dev_Sta;
-double Mediciones_Luminosidad[10]; //Guarda las mediciones de la luminosidad usadas para determinar el promedio
-
 
 void setup()
 {
@@ -102,7 +102,7 @@ void setup()
   // If time = 2, integration will be 402ms
   // If time = 3, use manual start / stop to perform your own integration
 
-  unsigned char time = 0;
+  unsigned char time = 2;
 
   // setTiming() will set the third parameter (ms) to the
   // requested integration time in ms (this will be useful later):
@@ -142,13 +142,6 @@ void setup()
     Serial.println("No sensor found.");
     digitalWrite(indicatorLed, LOW); // Set our LED.
   }
-
-  //Read analog values 
-  analogRead (analogPin_0);
-  analogRead (analogPin_0);
-  analogRead (analogPin_0);
-  analogRead (analogPin_0);
-  analogRead (analogPin_0);
   
 }
 //MAX44009 measurement
@@ -181,12 +174,12 @@ void MAX44009_Measurement(int type){
   if(type==0){
     // Output data to serial monitor
     Serial.print("Ambient Light luminance :");
-    Serial.print(luminance,3);
+    Serial.print(luminance);
     Serial.println(" lux");
     Serial.println();
   }
   else{
-    Serial.print(luminance,4);
+    Serial.print(luminance);
     Serial.println();
   }
   //delay(300);
@@ -276,12 +269,12 @@ void TSL2561_Measurement(int type){
       Serial.print(" data1: ");
       Serial.print(data1);
       Serial.print(" lux: ");
-      Serial.print(lux,3);
+      Serial.print(lux);
       if(good) Serial.println(" (good)"); else Serial.println(" (BAD)");
       Serial.println();
     }  
     else{
-      Serial.print(lux,4);
+      Serial.print(lux);
       Serial.println();
     }
   }
@@ -381,39 +374,6 @@ void BMP_180_Measurement(int type){
   }
 }
 
-//GA1A2 sensor messurement
-void GA1A2_Measurement(int type){
-  int Amount=10;
-  Promedio=0.0;
-  for(int ii=0;ii<Amount;ii++){
-    val_0 = analogRead(analogPin_0);
-    Luminosidad = val_0*4.95/1023.0;
-    Mediciones_Luminosidad[ii]=Luminosidad;
-    Promedio += Luminosidad; 
-  }
-  Promedio /= Amount;
-  Dev_Sta=0.0;
-  for(int ii=0;ii<Amount;ii++){
-    Dev_Sta += (Promedio-Mediciones_Luminosidad[ii])*(Promedio-Mediciones_Luminosidad[ii]);  
-  }
-  Dev_Sta = sqrt(Dev_Sta);
-  Dev_Sta /= Amount;
- 
-  // Print out the Luminosity.
-  if(type==0){
-    Serial.print("\tLuminosity: ");
-    Serial.print(Luminosidad,4);
-    Serial.print(" +/-");
-    Serial.print(Dev_Sta,4);
-    Serial.print(" W/m²");
-    Serial.println(); // Start a new line.
-  }
-  else{
-    Serial.print(Luminosidad,4);
-    Serial.println();
-  }
-}
-
 //Print informacion
 void loop()
 {
@@ -425,11 +385,6 @@ void loop()
   BMP_180_Measurement(type);
   //MAX44009_Measurement(type);
   TSL2561_Measurement(type);
-  //GA1A2_Measurement(type);
   //Test_I2C();
-  delay(200);
+  delay(1000);
 } 
-
-
-
-
